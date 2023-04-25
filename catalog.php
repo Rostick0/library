@@ -8,13 +8,14 @@ $genre = $_REQUEST['genre'];
 $genre = $genre ? Genre::get_by_name(protect_data($genre)) : '';
 if ($genre) $genre = $genre->fetch_assoc()['genre_id'];
 
-$sort = $_REQUEST['sort'];
-
+$format = array_map('intval', $_REQUEST['format'] ?? []);
 $price_min = $_REQUEST['price_min'];
 $price_max = $_REQUEST['price_max'];
 
-$books = Book::get_catalog($genre, $price_min, $price_max, 20, 0);
-var_dump($books);
+$page_number = get_page_counter($_REQUEST['page'], 20);
+$books = Book::get_catalog($genre, $price_min, $price_max, $format, 20, $page_number);
+$book_count = Book::get_catalog_count($genre, $price_min, $price_max, $format);
+$count_pages = count_pages($book_count, 20);
 ?>
 
 <?= get_head('Каталог книг'); ?>
@@ -63,14 +64,13 @@ var_dump($books);
                                 <input class="input-second input__filter" name="price_max" min="1" type="number" placeholder="До">
                             </div>
                         </div>
-
                         <div class="block-style catalog__aside_filter type">
                             <div class="filter__title">Формат</div>
                             <ul class="filter__list">
                                 <? foreach ($book_types as $book_type) : ?>
                                     <li class="filter__item">
                                         <label class="checkbox">
-                                            <input class="checkbox__input" type="checkbox" hidden>
+                                            <input class="checkbox__input" name="format[]" value="<?= $book_type['book_type_id'] ?>" type="checkbox" <?= array_search($book_type['book_type_id'], $format) !== false ? 'checked' : '' ?> hidden>
                                             <span class="checkbox__icon"></span>
                                             <span><?= $book_type['name'] ?></span>
                                         </label>
@@ -79,24 +79,10 @@ var_dump($books);
                             </ul>
                         </div>
                         <button class="button catalog__aside_button">Поиск</button>
+                        <a class="button catalog__aside_button" href="<?= strtok($_SERVER["REQUEST_URI"], '?') ?>">Сброс</a>
                     </form>
                 </aside>
                 <div class="catalog__shop">
-                    <div class="catalog__switch"></div>
-                    <div class="block-style catalog__sort">
-                        <strong class="catalog__sort_title">Сортировать по:</strong>
-                        <ul class="catalog__sort_list">
-                            <li class="catalog__sort_item">
-                                <a class="a" href="">Рейтингу</a>
-                            </li>
-                            <li class="catalog__sort_item">
-                                <a class="a" href="">Количеству просмотров</a>
-                            </li>
-                            <li class="catalog__sort_item">
-                                <a class="a" href="">Цене</a>
-                            </li>
-                        </ul>
-                    </div>
                     <ul class="catalog__products">
                         <? foreach ($books as $book) : ?>
                             <li class="block-style catalog__product catalog-product">
@@ -117,31 +103,7 @@ var_dump($books);
                     </ul>
                 </div>
             </div>
-            <div class="pagination">
-                <ul class="block-style pagination_list">
-                    <li class="pagination_item">
-                        <a class="a" href="">1</a>
-                    </li>
-                    <li class="pagination_item">
-                        <a class="a" href="">2</a>
-                    </li>
-                    <li class="pagination_item">
-                        <a class="a" href="">3</a>
-                    </li>
-                    <li class="pagination_item">
-                        <a class="a" href="">4</a>
-                    </li>
-                    <li class="pagination_item">
-                        <a class="a" href="">5</a>
-                    </li>
-                    <li class="pagination_item">
-                        <span class="a">...</span>
-                    </li>
-                    <li class="pagination_item">
-                        <a class="a" href="">235</a>
-                    </li>
-                </ul>
-            </div>
+            <?= get_pagination($page_number, $count_pages); ?>
         </div>
     </section>
 </main>

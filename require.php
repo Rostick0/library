@@ -24,3 +24,4 @@ require_once(__DIR__ . './helpers/session.php');
 require_once(__DIR__ . './components/head.php');
 require_once(__DIR__ . './components/header.php');
 require_once(__DIR__ . './components/footer.php');
+require_once(__DIR__ . './components/pagination.php');

@@ -53,8 +53,23 @@ function html_raiting(float $raiting, $text = '', $class = '', $tag = 'span')
     return "<$tag class=" . '"' . $class . ' ' . $raiting_class . '"' . ">$raiting$text</$tag>";
 }
 
-function count_page($count, $limit)
+function count_pages($count, $limit)
 {
     // 100 20
     return ceil($count / $limit);
+}
+
+function add_query_param($name, $value)
+{
+    $no_query = strtok($_SERVER["REQUEST_URI"], '?');
+    $request_uri = $_SERVER['REQUEST_URI'];
+
+    //if ($no_query === $request_uri)
+    return $request_uri . "&$name=$value";
+}
+
+function get_page_counter($query, $limit) {
+    if (!$query || $query == 1) return 0;
+
+    return ($query - 1) * $limit;
 }

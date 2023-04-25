@@ -30,7 +30,7 @@ class Book
         );
     }
 
-    public static function get_catalog($genre_id, $price_min, $price_max, $limit, $offset)
+    public static function get_catalog($genre_id, $price_min, $price_max, $format, $limit, $offset)
     {
         global $mysqli;
 
@@ -50,14 +50,72 @@ class Book
 
         if ($sql) $sql = "WHERE " . mb_substr($sql, 0, -4);
 
-        return $mysqli->query(
-            "SELECT
-                `book`.*,
-                `author`.`name` as `author_name`, `author`.`surname` as `author_surname`
-            FROM `book`
-                LEFT JOIN `author` ON `author`.`author_id` = `book`.`author_id`
-            $sql
-            LIMIT $limit OFFSET $offset"
-        );
+        $query_sql_begin = "SELECT
+            `book`.*,
+            `author`.`name` as `author_name`, `author`.`surname` as `author_surname`
+        FROM `book`
+            LEFT JOIN `author` ON `author`.`author_id` = `book`.`author_id`
+        $sql";
+
+        $query_sql = '';
+
+        if (empty($format)) {
+            $query_sql = $query_sql_begin;
+        } else {
+            foreach ($format as $format_value) {
+                $query_sql .= "UNION $query_sql_begin " . ($sql ? "AND `book`.`book_type_id` = '$format_value'" : "WHERE `book`.`book_type_id` = '$format_value'");
+            }
+
+            $query_sql = mb_substr($query_sql, 5);
+        }
+
+        $query_sql .= " LIMIT $limit OFFSET $offset";
+
+        return $mysqli->query($query_sql);
+    }
+    public static function get_catalog_count($genre_id, $price_min, $price_max, $format)
+    {
+        global $mysqli;
+
+        $genre_id = (int) $genre_id;
+        $price_min = (int) $price_min;
+        $price_max = (int) $price_max;
+
+        $sql = "";
+
+        if ($genre_id) $sql .= "`genre_id` = '$genre_id' AND";
+
+        if ($price_min) $sql .= "`price` >= '$price_min' AND";
+
+        if ($price_max) $sql .= "`price` <= '$price_max' AND";
+
+        if ($sql) $sql = "WHERE " . mb_substr($sql, 0, -4);
+
+        $query_sql_begin = "SELECT
+            COUNT(*)
+        FROM `book`
+            LEFT JOIN `author` ON `author`.`author_id` = `book`.`author_id`
+        $sql";
+
+        $query_sql = '';
+
+        if (empty($format)) {
+            $query_sql = $query_sql_begin;
+        } else {
+            foreach ($format as $format_value) {
+                $query_sql .= "UNION $query_sql_begin " . ($sql ? "AND `book`.`book_type_id` = '$format_value'" : "WHERE `book`.`book_type_id` = '$format_value'");
+            }
+
+            $query_sql = mb_substr($query_sql, 5);
+        }
+
+        $query = $mysqli->query($query_sql);
+
+        return $query ? $query->fetch_assoc()['COUNT(*)'] : 0;
     }
 }
+
+
+// SELECT `book`.*, `author`.`name` as `author_name`, `author`.`surname` as `author_surname` FROM `book` LEFT JOIN `author` ON `author`.`author_id` = `book`.`author_id` WHERE `book`.`book_type_id` = 2
+// UNION
+// SELECT `book`.*, `author`.`name` as `author_name`, `author`.`surname` as `author_surname` FROM `book` LEFT JOIN `author` ON `author`.`author_id` = `book`.`author_id` WHERE `book`.`book_type_id` = 1 LIMIT 5 OFFSET 0;
