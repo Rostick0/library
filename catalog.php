@@ -5,8 +5,8 @@ $genres = Genre::get();
 $book_types = BookType::get();
 
 $genre = $_REQUEST['genre'];
-$genre = $genre ? Genre::get_by_name(protect_data($genre)) : '';
-if ($genre) $genre = $genre->fetch_assoc()['genre_id'];
+$genre_id = $genre ? Genre::get_by_name(protect_data($genre)) : '';
+if ($genre_id) $genre_id = $genre_id->fetch_assoc()['genre_id'];
 
 $format = array_map('intval', $_REQUEST['format'] ?? []);
 $price_min = $_REQUEST['price_min'];
@@ -47,7 +47,7 @@ $count_pages = count_pages($book_count, 20);
                             <div class="select__switch">
                                 <!-- <div class="select__title">Жанр</div> -->
                                 <div class="select__input-block">
-                                    <input class="select__input" type="text" name="genre" placeholder="Жанр" readonly>
+                                    <input class="select__input" type="text" name="genre" placeholder="Жанр" value="<?= $genre ?>" readonly>
                                     <div class="select__icon"></div>
                                 </div>
                             </div>
@@ -60,8 +60,8 @@ $count_pages = count_pages($book_count, 20);
                         <div class="block-style catalog__aside_filter price">
                             <div class="filter__title">Цена</div>
                             <div class="filter__inputs">
-                                <input class="input-second input__filter" name="price_min" min="0" type="number" placeholder="От">
-                                <input class="input-second input__filter" name="price_max" min="1" type="number" placeholder="До">
+                                <input class="input-second input__filter" name="price_min" min="0" value="<?= $price_min ?>" type="number" placeholder="От">
+                                <input class="input-second input__filter" name="price_max" min="1" value="<?= $price_max ?>" type="number" placeholder="До">
                             </div>
                         </div>
                         <div class="block-style catalog__aside_filter type">
