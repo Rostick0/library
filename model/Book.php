@@ -16,11 +16,11 @@ class Book
                 `publishing`.`name` as `publishing_name`,
                 `book_type`.`name` as `book_type`,
                 (SELECT
-                    case when `book_has_user`.`user_id` = '$user_id'
+                    case when (`book_has_user`.`user_id` = '$user_id')
                         then true
                         else false
                     END
-                FROM `book_has_user`) as `user_have`
+                FROM `book_has_user` WHERE `book_has_user`.`book_id` = '$book_id') as `user_have`
             FROM `book` 
                 LEFT JOIN `author` ON `author`.`author_id` = `book`.`author_id`
                 LEFT JOIN `genre` ON `genre`.`genre_id` = `book`.`genre_id`
@@ -30,7 +30,7 @@ class Book
         );
     }
 
-    public static function get_catalog($genre_id, $price_min, $price_max, $format, $limit, $offset)
+    public static function get_catalog($genre_id, $price_min, $price_max, $format, $book_name, $limit, $offset)
     {
         global $mysqli;
 
@@ -40,15 +40,7 @@ class Book
         $limit = (int) $limit;
         $offset = (int) $offset;
 
-        $sql = "";
-
-        if ($genre_id) $sql .= "`genre_id` = '$genre_id' AND";
-
-        if ($price_min) $sql .= "`price` >= '$price_min' AND";
-
-        if ($price_max) $sql .= "`price` <= '$price_max' AND";
-
-        if ($sql) $sql = "WHERE " . mb_substr($sql, 0, -4);
+        $sql = $sql = Book::conditional_sql($genre_id, $price_min, $price_max, $book_name);
 
         $query_sql_begin = "SELECT
             `book`.*,
@@ -73,7 +65,7 @@ class Book
 
         return $mysqli->query($query_sql);
     }
-    public static function get_catalog_count($genre_id, $price_min, $price_max, $format)
+    public static function get_catalog_count($genre_id, $price_min, $price_max, $format, $book_name)
     {
         global $mysqli;
 
@@ -81,15 +73,7 @@ class Book
         $price_min = (int) $price_min;
         $price_max = (int) $price_max;
 
-        $sql = "";
-
-        if ($genre_id) $sql .= "`genre_id` = '$genre_id' AND";
-
-        if ($price_min) $sql .= "`price` >= '$price_min' AND";
-
-        if ($price_max) $sql .= "`price` <= '$price_max' AND";
-
-        if ($sql) $sql = "WHERE " . mb_substr($sql, 0, -4);
+        $sql = Book::conditional_sql($genre_id, $price_min, $price_max, $book_name);
 
         $query_sql_begin = "SELECT
             COUNT(*)
@@ -114,6 +98,23 @@ class Book
         return $query ? $query->fetch_assoc()['COUNT(*)'] : 0;
     }
 
+    private static function conditional_sql($genre_id, $price_min, $price_max, $book_name)
+    {
+        $sql = "";
+
+        if ($genre_id) $sql .= "`genre_id` = '$genre_id' AND";
+
+        if ($price_min) $sql .= "`price` >= '$price_min' AND";
+
+        if ($price_max) $sql .= "`price` <= '$price_max' AND";
+
+        if ($book_name) $sql .= "`book`.`name` LIKE '%$book_name%' AND";
+
+        if ($sql) $sql = "WHERE " . mb_substr($sql, 0, -4);
+
+        return $sql;
+    }
+
     public static function get_order_by($order_by, $limit = 8, $offset = 0)
     {
         global $mysqli;
@@ -132,8 +133,3 @@ class Book
         );
     }
 }
-
-
-// SELECT `book`.*, `author`.`name` as `author_name`, `author`.`surname` as `author_surname` FROM `book` LEFT JOIN `author` ON `author`.`author_id` = `book`.`author_id` WHERE `book`.`book_type_id` = 2
-// UNION
-// SELECT `book`.*, `author`.`name` as `author_name`, `author`.`surname` as `author_surname` FROM `book` LEFT JOIN `author` ON `author`.`author_id` = `book`.`author_id` WHERE `book`.`book_type_id` = 1 LIMIT 5 OFFSET 0;

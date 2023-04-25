@@ -30,6 +30,7 @@ require_once('./require.php');
                     </ul>
                     <div class="greeting__info_bottom">
                         <div>Начните пользоваться прямо сейчас:</div>
+                        <a href="/catalog.php" class="a">Перейти в каталог книг</a>
                         <a class="button greeting__button" href="/registration.php">Регистрация</a>
                     </div>
                 </div>

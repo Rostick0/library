@@ -48,8 +48,6 @@ function get_pagination(int $this_page, int $count_pages, $query_param = 'page')
         </li>';
     }
 
-    // var_dump($left_middle_count);
-
     return '<div class="pagination">
         <ul class="block-style pagination_list">
             ' . $first_pagination . '

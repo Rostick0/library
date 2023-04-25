@@ -6,10 +6,11 @@ $book_id = (int) $_GET['id'];
 $book = Book::get_full_by_id($book_id);
 
 if (!$book) {
-    // die(header('Location: /catalog.php'));
+    die(header('Location: /catalog.php'));
 }
 
 $book = $book->fetch_assoc();
+BookViewController::create($_SESSION['user']['user_id'], $book_id);
 
 $text = $_POST['comment_text'] ?? '';
 $raiting = $_POST['comment_raiting'] ?? '';
@@ -23,6 +24,10 @@ if (isset($_POST['comment_create'])) {
         $text = '';
         $raiting = '';
     }
+}
+
+if (isset($_POST['book_buy'])) {
+    BookHasUser::create($_SESSION['user']['user_id'], $book_id);
 }
 
 $page_number = get_page_counter($_REQUEST['page'], 20);
@@ -75,10 +80,10 @@ $count_pages = count_pages($comments_count, 20);
                                 <a class="button product__buy" target="_blank" href="<?= $book['file_link'] ?>">Читать</a>
                             </div>
                         <? else : ?>
-                            <div>
-                                <button class="button product__buy">Купить</button>
+                            <form method="post">
+                                <button class="button product__buy" name="book_buy">Купить</button>
                                 <div class="product__price"><?= $book['price'] ?> ₽</div>
-                            </div>
+                            </form>
                         <? endif ?>
                     </div>
                     <? if ($book['description']) : ?>

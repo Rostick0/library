@@ -2,6 +2,7 @@
 
 function get_header()
 {
+    $name = $_REQUEST['book_name'];
 
     $account_link = !$_SESSION['user']['user_id'] ?
         '<div class="header__profile">
@@ -41,9 +42,9 @@ function get_header()
                 <div class="container">
                     <div class="header__container">
                         <a class="header__title" href="/">Библиотека</a>
-                        <form class="header__seach" action="#">
-                            <input class="input header__seach_input" type="text" placeholder="Введите название, автора или жанр книги" required>
-                            <button class="button header__seach_button">Найти</button>
+                        <form class="header__seach" action="/catalog.php">
+                            <input class="input header__seach_input" type="text" placeholder="Введите название" name="book_name" value="' . $name . '">
+                            <button class="button header__seach_button" name="book_search">Найти</button>
                         </form>
                         ' . $account_link . '
                     </div>

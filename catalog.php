@@ -11,10 +11,11 @@ if ($genre_id) $genre_id = $genre_id->fetch_assoc()['genre_id'];
 $format = array_map('intval', $_REQUEST['format'] ?? []);
 $price_min = $_REQUEST['price_min'];
 $price_max = $_REQUEST['price_max'];
+$book_name = $_REQUEST['book_name'];
 
 $page_number = get_page_counter($_REQUEST['page'], 20);
-$books = Book::get_catalog($genre, $price_min, $price_max, $format, 20, $page_number);
-$book_count = Book::get_catalog_count($genre, $price_min, $price_max, $format);
+$books = Book::get_catalog($genre_id, $price_min, $price_max, $format, $book_name, 20, $page_number);
+$book_count = Book::get_catalog_count($genre_id, $price_min, $price_max, $book_name, $format);
 $count_pages = count_pages($book_count, 20);
 ?>
 
