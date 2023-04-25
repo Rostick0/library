@@ -25,9 +25,11 @@ if (isset($_POST['comment_create'])) {
     }
 }
 
+$page_number = get_page_counter($_REQUEST['page'], 20);
 $comments = BookComment::get($book_id, $_SESSION['user']['user_id'], 10, 0);
 $my_comment = BookComment::get_my($book_id, $_SESSION['user']['user_id'])->fetch_assoc();
 $comments_count = BookComment::get_count($book_id);
+$count_pages = count_pages($comments_count, 20);
 ?>
 
 <?= get_head($book['name']); ?>
@@ -215,31 +217,7 @@ $comments_count = BookComment::get_count($book_id);
                         </li>
                     <? endforeach ?>
                 </ul>
-                <div class="pagination">
-                    <ul class="block-style pagination_list">
-                        <li class="pagination_item">
-                            <a class="a" href="">1</a>
-                        </li>
-                        <li class="pagination_item">
-                            <a class="a" href="">2</a>
-                        </li>
-                        <li class="pagination_item">
-                            <a class="a" href="">3</a>
-                        </li>
-                        <li class="pagination_item">
-                            <a class="a" href="">4</a>
-                        </li>
-                        <li class="pagination_item">
-                            <a class="a" href="">5</a>
-                        </li>
-                        <li class="pagination_item">
-                            <span class="a">...</span>
-                        </li>
-                        <li class="pagination_item">
-                            <a class="a" href="">235</a>
-                        </li>
-                    </ul>
-                </div>
+                <?= get_pagination($page_number, $count_pages); ?>
             <? else : ?>
                 <h2 class="comments__title">Комментарии отсутствуют</h2>
             <? endif ?>

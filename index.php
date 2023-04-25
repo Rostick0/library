@@ -47,28 +47,22 @@ require_once('./require.php');
                 <div class="catalog__container">
                     <div class="catalog__shop">
                         <ul class="main__products">
-                            <li class="block-style main__product catalog-product">
-                                <div class="catalog-product__image">
-                                    <img src="https://sun6-21.userapi.com/impg/wN6SFFR4fZVqdvt3ztmF54GoZ3v1YNMVj3aLuw/tyQmDKVkM3Q.jpg?size=83x130&quality=96&sign=80a582ad117518a988db2b2552f440a8&c_uniq_tag=3GlGXkCLhUdVQ3m-DXw4tMRrrhoS55svZYy2APZvudU&type=album" alt="">
-                                </div>
-                                <div class="catalog-product__info">
-                                    <div class="catalog-product__author">Лев Толстой</div>
-                                    <strong class="catalog-product__title">Война и Мир</strong>
-                                    <div class="catalog-product__views">30K просмотров</div>
-                                    <div class="catalog-product__price">30 000 ₽</div>
-                                </div>
-                            </li>
-                            <li class="block-style main__product catalog-product">
-                                <div class="catalog-product__image">
-                                    <img src="https://tse3.mm.bing.net/th?id=OIP.sNpF_q79DgckAIL2eQrQiQHaLh&pid=Api" alt="">
-                                </div>
-                                <div class="catalog-product__info">
-                                    <div class="catalog-product__author">Федор Достоевский</div>
-                                    <strong class="catalog-product__title">Преступление и наказание</strong>
-                                    <div class="catalog-product__views">985 просмотров</div>
-                                    <div class="catalog-product__price">30 000 ₽</div>
-                                </div>
-                            </li>
+                            <? foreach (Book::get_order_by('date') as $book) : ?>
+                                <li class="block-style main__product catalog-product">
+                                    <a class="catalog-product__image" href="/book.php?id=<?= $book['book_id'] ?>">
+                                        <img src="<?= $book['image'] ?>" alt="<?= $book['name'] ?>">
+                                    </a>
+                                    <div class="catalog-product__info">
+                                        <div class="catalog-product__author"><?= $book['author_name'] . ' ' . $book['author_surname'] ?></div>
+                                        <strong class="catalog-product__title"><?= $book['name'] ?></strong>
+                                        <div class="catalog-product__views"><?= str_view_count($book['count_view']) ?></div>
+                                        <div class="catalog-product__price"><?= $book['price'] ?> ₽</div>
+                                        <div class="catalog-product__info_bottom">
+                                            <a class="button" href="/book.php?id=<?= $book['book_id'] ?>">Подробнее</a>
+                                        </div>
+                                    </div>
+                                </li>
+                            <? endforeach ?>
                         </ul>
                     </div>
                 </div>
@@ -80,28 +74,22 @@ require_once('./require.php');
                 <div class="catalog__container">
                     <div class="catalog__shop">
                         <ul class="main__products">
-                            <li class="block-style main__product catalog-product">
-                                <div class="catalog-product__image">
-                                    <img src="https://sun6-21.userapi.com/impg/wN6SFFR4fZVqdvt3ztmF54GoZ3v1YNMVj3aLuw/tyQmDKVkM3Q.jpg?size=83x130&quality=96&sign=80a582ad117518a988db2b2552f440a8&c_uniq_tag=3GlGXkCLhUdVQ3m-DXw4tMRrrhoS55svZYy2APZvudU&type=album" alt="">
-                                </div>
-                                <div class="catalog-product__info">
-                                    <div class="catalog-product__author">Лев Толстой</div>
-                                    <strong class="catalog-product__title">Война и Мир</strong>
-                                    <div class="catalog-product__views">30K просмотров</div>
-                                    <div class="catalog-product__price">30 000 ₽</div>
-                                </div>
-                            </li>
-                            <li class="block-style main__product catalog-product">
-                                <div class="catalog-product__image">
-                                    <img src="https://tse3.mm.bing.net/th?id=OIP.sNpF_q79DgckAIL2eQrQiQHaLh&pid=Api" alt="">
-                                </div>
-                                <div class="catalog-product__info">
-                                    <div class="catalog-product__author">Федор Достоевский</div>
-                                    <strong class="catalog-product__title">Преступление и наказание</strong>
-                                    <div class="catalog-product__views">985 просмотров</div>
-                                    <div class="catalog-product__price">30 000 ₽</div>
-                                </div>
-                            </li>
+                            <? foreach (Book::get_order_by('count_view') as $book) : ?>
+                                <li class="block-style main__product catalog-product">
+                                    <a class="catalog-product__image" href="/book.php?id=<?= $book['book_id'] ?>">
+                                        <img src="<?= $book['image'] ?>" alt="<?= $book['name'] ?>">
+                                    </a>
+                                    <div class="catalog-product__info">
+                                        <div class="catalog-product__author"><?= $book['author_name'] . ' ' . $book['author_surname'] ?></div>
+                                        <strong class="catalog-product__title"><?= $book['name'] ?></strong>
+                                        <div class="catalog-product__views"><?= str_view_count($book['count_view']) ?></div>
+                                        <div class="catalog-product__price"><?= $book['price'] ?> ₽</div>
+                                        <div class="catalog-product__info_bottom">
+                                            <a class="button" href="/book.php?id=<?= $book['book_id'] ?>">Подробнее</a>
+                                        </div>
+                                    </div>
+                                </li>
+                            <? endforeach ?>
                         </ul>
                     </div>
                 </div>
@@ -113,28 +101,22 @@ require_once('./require.php');
                 <div class="catalog__container">
                     <div class="catalog__shop">
                         <ul class="main__products">
-                            <li class="block-style main__product catalog-product">
-                                <div class="catalog-product__image">
-                                    <img src="https://sun6-21.userapi.com/impg/wN6SFFR4fZVqdvt3ztmF54GoZ3v1YNMVj3aLuw/tyQmDKVkM3Q.jpg?size=83x130&quality=96&sign=80a582ad117518a988db2b2552f440a8&c_uniq_tag=3GlGXkCLhUdVQ3m-DXw4tMRrrhoS55svZYy2APZvudU&type=album" alt="">
-                                </div>
-                                <div class="catalog-product__info">
-                                    <div class="catalog-product__author">Лев Толстой</div>
-                                    <strong class="catalog-product__title">Война и Мир</strong>
-                                    <div class="catalog-product__views">30K просмотров</div>
-                                    <div class="catalog-product__price">30 000 ₽</div>
-                                </div>
-                            </li>
-                            <li class="block-style main__product catalog-product">
-                                <div class="catalog-product__image">
-                                    <img src="https://tse3.mm.bing.net/th?id=OIP.sNpF_q79DgckAIL2eQrQiQHaLh&pid=Api" alt="">
-                                </div>
-                                <div class="catalog-product__info">
-                                    <div class="catalog-product__author">Федор Достоевский</div>
-                                    <strong class="catalog-product__title">Преступление и наказание</strong>
-                                    <div class="catalog-product__views">985 просмотров</div>
-                                    <div class="catalog-product__price">30 000 ₽</div>
-                                </div>
-                            </li>
+                            <? foreach (Book::get_order_by('count_reader') as $book) : ?>
+                                <li class="block-style main__product catalog-product">
+                                    <a class="catalog-product__image" href="/book.php?id=<?= $book['book_id'] ?>">
+                                        <img src="<?= $book['image'] ?>" alt="<?= $book['name'] ?>">
+                                    </a>
+                                    <div class="catalog-product__info">
+                                        <div class="catalog-product__author"><?= $book['author_name'] . ' ' . $book['author_surname'] ?></div>
+                                        <strong class="catalog-product__title"><?= $book['name'] ?></strong>
+                                        <div class="catalog-product__views"><?= str_view_count($book['count_view']) ?></div>
+                                        <div class="catalog-product__price"><?= $book['price'] ?> ₽</div>
+                                        <div class="catalog-product__info_bottom">
+                                            <a class="button" href="/book.php?id=<?= $book['book_id'] ?>">Подробнее</a>
+                                        </div>
+                                    </div>
+                                </li>
+                            <? endforeach ?>
                         </ul>
                     </div>
                 </div>
@@ -146,28 +128,22 @@ require_once('./require.php');
                 <div class="catalog__container">
                     <div class="catalog__shop">
                         <ul class="main__products">
-                            <li class="block-style main__product catalog-product">
-                                <div class="catalog-product__image">
-                                    <img src="https://sun6-21.userapi.com/impg/wN6SFFR4fZVqdvt3ztmF54GoZ3v1YNMVj3aLuw/tyQmDKVkM3Q.jpg?size=83x130&quality=96&sign=80a582ad117518a988db2b2552f440a8&c_uniq_tag=3GlGXkCLhUdVQ3m-DXw4tMRrrhoS55svZYy2APZvudU&type=album" alt="">
-                                </div>
-                                <div class="catalog-product__info">
-                                    <div class="catalog-product__author">Лев Толстой</div>
-                                    <strong class="catalog-product__title">Война и Мир</strong>
-                                    <div class="catalog-product__views">30K просмотров</div>
-                                    <div class="catalog-product__price">30 000 ₽</div>
-                                </div>
-                            </li>
-                            <li class="block-style main__product catalog-product">
-                                <div class="catalog-product__image">
-                                    <img src="https://tse3.mm.bing.net/th?id=OIP.sNpF_q79DgckAIL2eQrQiQHaLh&pid=Api" alt="">
-                                </div>
-                                <div class="catalog-product__info">
-                                    <div class="catalog-product__author">Федор Достоевский</div>
-                                    <strong class="catalog-product__title">Преступление и наказание</strong>
-                                    <div class="catalog-product__views">985 просмотров</div>
-                                    <div class="catalog-product__price">30 000 ₽</div>
-                                </div>
-                            </li>
+                            <? foreach (Book::get_order_by('count_comment') as $book) : ?>
+                                <li class="block-style main__product catalog-product">
+                                    <a class="catalog-product__image" href="/book.php?id=<?= $book['book_id'] ?>">
+                                        <img src="<?= $book['image'] ?>" alt="<?= $book['name'] ?>">
+                                    </a>
+                                    <div class="catalog-product__info">
+                                        <div class="catalog-product__author"><?= $book['author_name'] . ' ' . $book['author_surname'] ?></div>
+                                        <strong class="catalog-product__title"><?= $book['name'] ?></strong>
+                                        <div class="catalog-product__views"><?= str_view_count($book['count_view']) ?></div>
+                                        <div class="catalog-product__price"><?= $book['price'] ?> ₽</div>
+                                        <div class="catalog-product__info_bottom">
+                                            <a class="button" href="/book.php?id=<?= $book['book_id'] ?>">Подробнее</a>
+                                        </div>
+                                    </div>
+                                </li>
+                            <? endforeach ?>
                         </ul>
                     </div>
                 </div>

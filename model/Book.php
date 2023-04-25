@@ -113,6 +113,24 @@ class Book
 
         return $query ? $query->fetch_assoc()['COUNT(*)'] : 0;
     }
+
+    public static function get_order_by($order_by, $limit = 8, $offset = 0)
+    {
+        global $mysqli;
+
+        $order_by = protect_data($order_by);
+        $limit = (int) $limit;
+        $offset = (int) $offset;
+
+        return $mysqli->query(
+            "SELECT
+                `book`.*,
+                `author`.`name` as `author_name`, `author`.`surname` as `author_surname`
+            FROM `book`
+                LEFT JOIN `author` ON `author`.`author_id` = `book`.`author_id`
+            ORDER BY `$order_by` DESC LIMIT $limit OFFSET $offset"
+        );
+    }
 }
 
 
