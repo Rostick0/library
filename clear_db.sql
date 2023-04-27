@@ -3,14 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Апр 26 2023 г., 01:31
+-- Время создания: Апр 27 2023 г., 16:30
 -- Версия сервера: 8.0.29
 -- Версия PHP: 7.4.29
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -29,14 +24,15 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `author` (
   `author_id` int NOT NULL,
-  `name` varchar(45) NOT NULL,
-  `surname` varchar(45) DEFAULT NULL,
-  `patronymic` varchar(45) DEFAULT NULL,
-  `avatar` varchar(255) DEFAULT NULL,
-  `description` text,
+  `name` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
+  `surname` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `patronymic` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `avatar` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_general_ci,
   `birthday` date DEFAULT NULL,
   `date_death` date DEFAULT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 -- --------------------------------------------------------
 
@@ -46,10 +42,10 @@ CREATE TABLE `author` (
 
 CREATE TABLE `book` (
   `book_id` int NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `description` text,
+  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text COLLATE utf8mb4_general_ci,
   `price` float NOT NULL,
-  `image` varchar(255) DEFAULT NULL,
+  `image` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `date` date DEFAULT NULL,
   `count_page` int NOT NULL,
   `raiting` float DEFAULT NULL,
@@ -57,12 +53,14 @@ CREATE TABLE `book` (
   `count_comment` int NOT NULL DEFAULT '0',
   `count_reader` int NOT NULL DEFAULT '0',
   `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `file_link` varchar(255) NOT NULL,
+  `file_link` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `genre_id` int DEFAULT NULL,
   `author_id` int DEFAULT NULL,
   `book_type_id` int NOT NULL DEFAULT '1',
   `publishing_id` int DEFAULT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
 
 --
 -- Структура таблицы `book_comment`
@@ -70,13 +68,13 @@ CREATE TABLE `book` (
 
 CREATE TABLE `book_comment` (
   `book_comment_id` int NOT NULL,
-  `text` text NOT NULL,
+  `text` text COLLATE utf8mb4_general_ci NOT NULL,
   `raiting` float NOT NULL,
   `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `book_id` int NOT NULL,
   `user_id` int NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Триггеры `book_comment`
@@ -116,7 +114,8 @@ CREATE TABLE `book_has_user` (
   `book_has_user_id` int NOT NULL,
   `user_id` int NOT NULL,
   `book_id` int NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 --
 -- Триггеры `book_has_user`
@@ -142,12 +141,8 @@ DELIMITER ;
 
 CREATE TABLE `book_type` (
   `book_type_id` int NOT NULL,
-  `name` varchar(45) NOT NULL
-);
-
---
--- Дамп данных таблицы `book_type`
---
+  `name` varchar(45) COLLATE utf8mb4_general_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `book_type` (`book_type_id`, `name`) VALUES
 (1, 'Электронная книга'),
@@ -163,7 +158,7 @@ CREATE TABLE `book_view` (
   `book_view_id` int NOT NULL,
   `user_id` int NOT NULL,
   `book_id` int NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Триггеры `book_view`
@@ -183,8 +178,8 @@ DELIMITER ;
 
 CREATE TABLE `genre` (
   `genre_id` int NOT NULL,
-  `name` varchar(45) NOT NULL
-);
+  `name` varchar(45) COLLATE utf8mb4_general_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Дамп данных таблицы `genre`
@@ -203,10 +198,10 @@ INSERT INTO `genre` (`genre_id`, `name`) VALUES
 
 CREATE TABLE `publishing` (
   `publishing_id` int NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `photo` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `description` text CHARACTER SET utf8mb4
-);
+  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `photo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -216,12 +211,13 @@ CREATE TABLE `publishing` (
 
 CREATE TABLE `session` (
   `session_id` int NOT NULL,
-  `token` varchar(255) NOT NULL,
-  `ip` varchar(45) NOT NULL,
-  `user_agent` varchar(255) NOT NULL,
+  `token` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `ip` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
+  `user_agent` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `user_id` int NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 --
 -- Структура таблицы `user`
@@ -229,16 +225,16 @@ CREATE TABLE `session` (
 
 CREATE TABLE `user` (
   `user_id` int NOT NULL,
-  `name` varchar(45) NOT NULL,
-  `surname` varchar(45) DEFAULT NULL,
-  `patronymic` varchar(45) DEFAULT NULL,
-  `avatar` varchar(255) DEFAULT NULL,
-  `telephone` varchar(20) DEFAULT NULL,
-  `email` varchar(80) NOT NULL,
-  `password` varchar(255) NOT NULL,
+  `name` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
+  `surname` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `patronymic` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `avatar` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `telephone` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `email` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `birth` date DEFAULT NULL,
   `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Индексы сохранённых таблиц
@@ -323,25 +319,25 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT для таблицы `author`
 --
 ALTER TABLE `author`
-  MODIFY `author_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT;
+  MODIFY `author_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT для таблицы `book`
 --
 ALTER TABLE `book`
-  MODIFY `book_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT;
+  MODIFY `book_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT для таблицы `book_comment`
 --
 ALTER TABLE `book_comment`
-  MODIFY `book_comment_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT;
+  MODIFY `book_comment_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT для таблицы `book_has_user`
 --
 ALTER TABLE `book_has_user`
-  MODIFY `book_has_user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT;
+  MODIFY `book_has_user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT для таблицы `book_type`
@@ -353,7 +349,7 @@ ALTER TABLE `book_type`
 -- AUTO_INCREMENT для таблицы `book_view`
 --
 ALTER TABLE `book_view`
-  MODIFY `book_view_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT;
+  MODIFY `book_view_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT для таблицы `genre`
@@ -365,19 +361,19 @@ ALTER TABLE `genre`
 -- AUTO_INCREMENT для таблицы `publishing`
 --
 ALTER TABLE `publishing`
-  MODIFY `publishing_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT;
+  MODIFY `publishing_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT для таблицы `session`
 --
 ALTER TABLE `session`
-  MODIFY `session_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT;
+  MODIFY `session_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT для таблицы `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT;
+  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
