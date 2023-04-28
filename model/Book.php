@@ -20,7 +20,7 @@ class Book
                         then true
                         else false
                     END
-                FROM `book_has_user` WHERE `book_has_user`.`book_id` = '$book_id') as `user_have`
+                FROM `book_has_user` WHERE `book_has_user`.`book_id` = '$book_id' AND `book_has_user`.`user_id` = '$user_id') as `user_have`
             FROM `book` 
                 LEFT JOIN `author` ON `author`.`author_id` = `book`.`author_id`
                 LEFT JOIN `genre` ON `genre`.`genre_id` = `book`.`genre_id`
@@ -113,6 +113,33 @@ class Book
         if ($sql) $sql = "WHERE " . mb_substr($sql, 0, -4);
 
         return $sql;
+    }
+
+    public static function get_by_user($user_id, $limit, $offset)
+    {
+        global $mysqli;
+
+        $user_id = (int) $user_id;
+        $limit = (int) $limit;
+        $offset = (int) $offset;
+
+        return $mysqli->query("SELECT DISTINCT
+            `book`.*,
+            `author`.`name` as `author_name`, `author`.`surname` as `author_surname`
+        FROM `book`
+            LEFT JOIN `author` ON `author`.`author_id` = `book`.`author_id`
+            INNER JOIN `book_has_user` ON  `book_has_user`.`user_id` = '$user_id'
+        LIMIT $limit OFFSET $offset");
+    }
+
+    public static function get_count_by_user($user_id)
+    {
+        global $mysqli;
+
+        return $mysqli->query("SELECT
+            COUNT(*)
+        FROM `book_has_user`
+        WHERE `user_id` = '$user_id'");
     }
 
     public static function get_order_by($order_by, $limit = 8, $offset = 0)

@@ -5,9 +5,11 @@ $book_id = (int) $_GET['id'];
 
 $book = Book::get_full_by_id($book_id);
 
-if (!$book) {
-    die(header('Location: /catalog.php'));
-}
+// if (!$book) {
+//     die(header('Location: /catalog.php'));
+// }
+
+var_dump($mysqli->error);
 
 $book = $book->fetch_assoc();
 BookViewController::create($_SESSION['user']['user_id'], $book_id);
@@ -161,9 +163,9 @@ $count_pages = count_pages($comments_count, 20);
                     <h2 class="comments__title">Ваш отзыв</h2>
                     <div class="block-style comments__item comment">
                         <div class="comment__avatar">
-                            <div class="comment__image">
+                            <a class="comment__image">
                                 <img src="/upload/<?= $my_comment['avatar'] ?>" alt="">
-                            </div>
+                            </a>
                         </div>
                         <div class="comment__info">
                             <div class="comment__info_top">
