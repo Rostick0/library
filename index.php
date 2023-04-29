@@ -31,7 +31,7 @@ require_once('./require.php');
                     <div class="greeting__info_bottom">
                         <div>Начните пользоваться прямо сейчас:</div>
                         <a href="/catalog.php" class="a">Перейти в каталог книг</a>
-                        <? if (!empty($_SESSION['user'])) : ?>
+                        <? if (empty($_SESSION['user'])) : ?>
                             <a class="button greeting__button" href="/registration.php">Регистрация</a>
                         <? endif ?>
                     </div>

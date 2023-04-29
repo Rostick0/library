@@ -123,12 +123,12 @@ class Book
         $limit = (int) $limit;
         $offset = (int) $offset;
 
-        return $mysqli->query("SELECT DISTINCT
+        return $mysqli->query("SELECT
             `book`.*,
             `author`.`name` as `author_name`, `author`.`surname` as `author_surname`
         FROM `book`
             LEFT JOIN `author` ON `author`.`author_id` = `book`.`author_id`
-            INNER JOIN `book_has_user` ON  `book_has_user`.`user_id` = '$user_id'
+            INNER JOIN `book_has_user` ON  `book_has_user`.`user_id` = '$user_id' AND `book`.`book_id` = `book_has_user`.`book_id`
         LIMIT $limit OFFSET $offset");
     }
 
@@ -139,7 +139,7 @@ class Book
         return $mysqli->query("SELECT
             COUNT(*)
         FROM `book_has_user`
-        WHERE `user_id` = '$user_id'");
+        WHERE `user_id` = '$user_id'")->fetch_assoc()['COUNT(*)'];
     }
 
     public static function get_order_by($order_by, $limit = 8, $offset = 0)

@@ -8,8 +8,6 @@ $page_number = get_page_counter($_REQUEST['page'], 20);
 $books = Book::get_by_user($user_id, 20, $page_number);
 $book_count = Book::get_count_by_user($user_id);
 $count_pages = count_pages($book_count, 20);
-
-var_dump($books->num_rows);
 ?>
 
 <?= get_head('Профиль'); ?>
@@ -37,7 +35,7 @@ var_dump($books->num_rows);
             <div class="block-style profile__content">
                 <div class="profile__avatar">
                     <div class="profile__image">
-                        <? if ($user['avatar'] && file_exists('/upload/' . $user['avatar'])) : ?>
+                        <? if ($user['avatar'] && file_exists(__DIR__ . '/upload/' . $user['avatar'])) : ?>
                             <img src="<?= '/upload/' . $user['avatar'] ?>" alt="<?= $user['name'] . ' ' . $user['surname'] ?>" loading="lazy">
                         <? else : ?>
                             <img src="<?= '/img/default_avatar.png' ?>" alt="Аватарка" loading="lazy">
@@ -90,7 +88,7 @@ var_dump($books->num_rows);
     <section class="catalog">
         <div class="container">
             <? if ($book_count > 0) : ?>
-                <h2 class="catalog__title">Мои книги</h2>
+                <h2 class="catalog__title"><?= empty($_SESSION['user']) ? 'Книги пользователя' : 'Мои книги' ?></h2>
                 <div class="catalog__container">
                     <ul class="catalog__products">
                         <? foreach ($books as $book) : ?>
@@ -108,6 +106,8 @@ var_dump($books->num_rows);
                         <? endforeach ?>
                     </ul>
                 </div>
+            <? else : ?>
+                <h2 class="catalog__title">Приобретенные книги отсутствуют</h2>
             <? endif; ?>
             <?= get_pagination($page_number, $count_pages); ?>
         </div>
