@@ -16,6 +16,8 @@ class UserController
 
         if (!$check_valid['type']) return $check_valid;
 
+        if (mb_strlen($password) < 8) return set_error('Пароль меньше 8 символов');
+
         if (User::get_by_email($email)->num_rows > 0) return set_error('Данный аккаунт уже существует');
 
         $avatar = $avatar['tmp_name'] ? ImageMyLib::uploadImage($avatar) : null;

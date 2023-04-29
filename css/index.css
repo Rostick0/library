@@ -756,6 +756,24 @@ body {
     margin-bottom: 10px;
 }
 
+.product__rental {
+    display: flex;
+    column-gap: 10px;
+}
+
+.product__rental >*{
+    max-height: 48px;
+}
+
+
+.product__rental_select {
+    max-width: 70px;
+}
+
+.product__rental_select .select__item::after {
+    content: " д";
+}
+
 .product__author {
     font-size: 14px;
 }
@@ -783,7 +801,6 @@ body {
 
 .product__buy {
     max-width: 160px;
-    margin-bottom: 8px;
 }
 
 .product__info_list {

@@ -12,6 +12,10 @@ $raiting = $_POST['comment_raiting'] ?? $comment['raiting'];
 
 if (isset($_POST['comment_update'])) {
     $request = BookCommentController::update($book_comment_id, $text, $raiting, $_SESSION['user']['user_id']);
+
+    if ($request['type']) {
+        header("Refresh: 2");
+    }
 }
 
 ?>

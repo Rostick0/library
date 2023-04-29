@@ -20,7 +20,7 @@ class Book
                         then true
                         else false
                     END
-                FROM `book_has_user` WHERE `book_has_user`.`book_id` = '$book_id' AND `book_has_user`.`user_id` = '$user_id') as `user_have`
+                FROM `book_has_user` WHERE `book_has_user`.`book_id` = '$book_id' AND `book_has_user`.`user_id` = '$user_id' AND `book_has_user`.`end_rental` >= NOW() ORDER BY `book_has_user`.`end_rental` DESC LIMIT 1) as `user_have`
             FROM `book` 
                 LEFT JOIN `author` ON `author`.`author_id` = `book`.`author_id`
                 LEFT JOIN `genre` ON `genre`.`genre_id` = `book`.`genre_id`

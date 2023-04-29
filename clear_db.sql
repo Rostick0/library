@@ -1,17 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 5.1.3
--- https://www.phpmyadmin.net/
---
--- Хост: 127.0.0.1:3306
--- Время создания: Апр 27 2023 г., 16:30
--- Версия сервера: 8.0.29
--- Версия PHP: 7.4.29
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
 --
 -- База данных: `library`
 --
@@ -32,7 +18,6 @@ CREATE TABLE `author` (
   `birthday` date DEFAULT NULL,
   `date_death` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 
 -- --------------------------------------------------------
 
@@ -59,8 +44,6 @@ CREATE TABLE `book` (
   `book_type_id` int NOT NULL DEFAULT '1',
   `publishing_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
 
 --
 -- Структура таблицы `book_comment`
@@ -113,23 +96,24 @@ DELIMITER ;
 CREATE TABLE `book_has_user` (
   `book_has_user_id` int NOT NULL,
   `user_id` int NOT NULL,
-  `book_id` int NOT NULL
+  `book_id` int NOT NULL,
+  `start_rental` date NOT NULL,
+  `end_rental` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 
 --
 -- Триггеры `book_has_user`
 --
 DELIMITER $$
-CREATE TRIGGER `book has user delete` AFTER DELETE ON `book_has_user` FOR EACH ROW UPDATE `book` SET
-`count_reader`=(SELECT * FROM (SELECT COUNT(*) FROM `book` WHERE OLD.`book_id` = `book`.`book_id`) as `count`)
-WHERE OLD.`book_id` = `book`.`book_id`
+CREATE TRIGGER `book has user delete` AFTER DELETE ON `book_has_user` FOR EACH ROW UPDATE `book` SET `count_reader`=
+(SELECT COUNT(DISTINCT `book_id`, `user_id`) as `count` FROM `book_has_user` WHERE `book_has_user`.`book_id` = OLD.`book_id`)
+WHERE `book`.`book_id` = OLD.`book_id`
 $$
 DELIMITER ;
 DELIMITER $$
-CREATE TRIGGER `book has user insert` AFTER INSERT ON `book_has_user` FOR EACH ROW UPDATE `book` SET
-`count_reader`=(SELECT * FROM (SELECT COUNT(*) FROM `book` WHERE NEW.`book_id` = `book`.`book_id`) as `count`)
-WHERE NEW.`book_id` = `book`.`book_id`
+CREATE TRIGGER `book has user insert` AFTER INSERT ON `book_has_user` FOR EACH ROW UPDATE `book` SET `count_reader`=
+(SELECT COUNT(DISTINCT `book_id`, `user_id`) as `count` FROM `book_has_user` WHERE `book_has_user`.`book_id` = NEW.`book_id`)
+WHERE `book`.`book_id` = NEW.`book_id`
 $$
 DELIMITER ;
 
@@ -143,6 +127,10 @@ CREATE TABLE `book_type` (
   `book_type_id` int NOT NULL,
   `name` varchar(45) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Дамп данных таблицы `book_type`
+--
 
 INSERT INTO `book_type` (`book_type_id`, `name`) VALUES
 (1, 'Электронная книга'),
@@ -165,8 +153,8 @@ CREATE TABLE `book_view` (
 --
 DELIMITER $$
 CREATE TRIGGER `book view insert` AFTER INSERT ON `book_view` FOR EACH ROW UPDATE `book` SET
-`count_view`=(SELECT * FROM (SELECT COUNT(*) FROM `book` WHERE NEW.`book_id` = `book`.`book_id`) as `count`)
-WHERE NEW.`book_id` = `book`.`book_id`
+`count_view`=(SELECT * FROM (SELECT COUNT(*) FROM `book_view` WHERE `book_view`.`book_id` = NEW.`book_id`) as `count`)
+WHERE `book`.`book_id` = NEW.`book_id`
 $$
 DELIMITER ;
 
@@ -203,8 +191,6 @@ CREATE TABLE `publishing` (
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
 --
 -- Структура таблицы `session`
 --
@@ -217,7 +203,6 @@ CREATE TABLE `session` (
   `user_id` int NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 
 --
 -- Структура таблицы `user`

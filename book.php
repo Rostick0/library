@@ -9,27 +9,9 @@ $book = Book::get_full_by_id($book_id);
 //     die(header('Location: /catalog.php'));
 // }
 
-var_dump($mysqli->error);
-
 $book = $book->fetch_assoc();
-BookViewController::create($_SESSION['user']['user_id'], $book_id);
-
-$text = $_POST['comment_text'] ?? '';
-$raiting = $_POST['comment_raiting'] ?? '';
-
-$request = [];
-
-if (isset($_POST['comment_create'])) {
-    $request = BookCommentController::create($text, $raiting, $book_id, $_SESSION['user']['user_id']);
-
-    if (!$request['type']) {
-        $text = '';
-        $raiting = '';
-    }
-}
-
-if (isset($_POST['book_buy'])) {
-    BookHasUser::create($_SESSION['user']['user_id'], $book_id);
+if (!empty($_SESSION['user'])) {
+    BookViewController::create($_SESSION['user']['user_id'], $book_id);
 }
 
 $page_number = get_page_counter($_REQUEST['page'], 20);
@@ -37,6 +19,28 @@ $comments = BookComment::get($book_id, $_SESSION['user']['user_id'], 10, 0);
 $my_comment = BookComment::get_my($book_id, $_SESSION['user']['user_id'])->fetch_assoc();
 $comments_count = BookComment::get_count($book_id);
 $count_pages = count_pages($comments_count, 20);
+
+$request = [];
+$text = $_POST['comment_text'] ?? '';
+$raiting = $_POST['comment_raiting'] ?? '';
+
+if (empty($my_comment) && isset($_POST['comment_create'])) {
+    $request = BookCommentController::create($text, $raiting, $book_id, $_SESSION['user']['user_id']);
+
+    if ($request['type']) {
+        header("Refresh: 3");
+    }
+}
+
+$rental_period = $_POST['book_rental_period'];
+
+if (isset($_POST['book_buy'])) {
+    $query = BookHasUserController::create($_SESSION['user']['user_id'], $book_id, $rental_period);
+
+    if ($query) {
+        header("Refresh: 0");
+    }
+}
 ?>
 
 <?= get_head($book['name']); ?>
@@ -82,9 +86,22 @@ $count_pages = count_pages($comments_count, 20);
                                 <a class="button product__buy" target="_blank" href="<?= $book['file_link'] ?>">Читать</a>
                             </div>
                         <? else : ?>
-                            <form method="post">
-                                <button class="button product__buy" name="book_buy">Купить</button>
-                                <div class="product__price"><?= $book['price'] ?> ₽</div>
+                            <form class="product__rental" method="post">
+                                <div class="select product__rental_select">
+                                    <div class="select__switch">
+                                        <div class="select__input-block">
+                                            <input class="select__input" type="text" name="book_rental_period" placeholder="Срок" value="<?= $rental_period ?>" readonly required>
+                                            <div class="select__icon"></div>
+                                        </div>
+                                    </div>
+                                    <ul class="select__list">
+                                        <li class="select__item">7</li>
+                                        <li class="select__item">14</li>
+                                        <li class="select__item">30</li>
+                                        <li class="select__item">90</li>
+                                    </ul>
+                                </div>
+                                <button class="button product__buy product__rental_button" name="book_buy">Взять в аренду</button>
                             </form>
                         <? endif ?>
                     </div>

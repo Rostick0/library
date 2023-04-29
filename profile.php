@@ -77,10 +77,12 @@ $count_pages = count_pages($book_count, 20);
                             </li>
                         <? endif; ?>
                     </ul>
-                    <div class="profile__info_bottom">
-                        <a class="button profile__edit" href="/profile-edit.php">Редактировать</a>
-                        <a class="_red-text" href="/logout.php">Выйти</a>
-                    </div>
+                    <? if ($_SESSION['user']['user_id'] == $user_id) : ?>
+                        <div class="profile__info_bottom">
+                            <a class="button profile__edit" href="/profile-edit.php">Редактировать</a>
+                            <a class="_red-text" href="/logout.php">Выйти</a>
+                        </div>
+                    <? endif ?>
                 </div>
             </div>
         </div>

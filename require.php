@@ -20,6 +20,7 @@ require_once(__DIR__ . './model/BookView.php');
 require_once(__DIR__ . './controller/User.php');
 require_once(__DIR__ . './controller/BookComment.php');
 require_once(__DIR__ . './controller/BookView.php');
+require_once(__DIR__ . './controller/BookHasUser.php');
 
 require_once(__DIR__ . './helpers/session.php');
 

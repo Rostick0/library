@@ -50,7 +50,7 @@ class BookCommentController
 
     private static function valid($text, $raiting)
     {
-        if (mb_strlen($text) < 20) return set_error('Текст меньше 20 символов');
+        if (mb_strlen($text) < 5) return set_error('Текст меньше 5 символов');
 
         if (!$raiting) return set_error('Поставьте рейтинг');
 
