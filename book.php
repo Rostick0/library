@@ -5,9 +5,9 @@ $book_id = (int) $_GET['id'];
 
 $book = Book::get_full_by_id($book_id);
 
-// if (!$book) {
-//     die(header('Location: /catalog.php'));
-// }
+if (!$book) {
+    die(header('Location: /catalog.php'));
+}
 
 $book = $book->fetch_assoc();
 if (!empty($_SESSION['user'])) {
