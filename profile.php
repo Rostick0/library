@@ -92,7 +92,7 @@ $count_pages = count_pages($book_count, 20);
             <? if ($book_count > 0) : ?>
                 <h2 class="catalog__title"><?= empty($_SESSION['user']) ? 'Книги пользователя' : 'Мои книги' ?></h2>
                 <div class="catalog__container">
-                    <ul class="catalog__products">
+                    <ul class="catalog__products profile__catalog-products">
                         <? foreach ($books as $book) : ?>
                             <li class="block-style catalog__product catalog-product">
                                 <a class="catalog-product__image" href="/book.php?id=<?= $book['book_id'] ?>">

@@ -46,7 +46,6 @@ $count_pages = count_pages($book_count, 20);
                     <form class="catalog__aside_form" action="#" method="get">
                         <div class="select">
                             <div class="select__switch">
-                                <!-- <div class="select__title">Жанр</div> -->
                                 <div class="select__input-block">
                                     <input class="select__input" type="text" name="genre" placeholder="Жанр" value="<?= $genre ?>" readonly>
                                     <div class="select__icon"></div>
@@ -79,7 +78,7 @@ $count_pages = count_pages($book_count, 20);
                                 <? endforeach ?>
                             </ul>
                         </div>
-                        <button class="button catalog__aside_button">Поиск</button>
+                        <button class="button catalog__aside_button _search">Поиск</button>
                         <a class="button catalog__aside_button" href="<?= strtok($_SERVER["REQUEST_URI"], '?') ?>">Сброс</a>
                     </form>
                 </aside>

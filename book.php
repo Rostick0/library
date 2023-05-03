@@ -5,9 +5,9 @@ $book_id = (int) $_GET['id'];
 
 $book = Book::get_full_by_id($book_id);
 
-if (!$book) {
-    die(header('Location: /catalog.php'));
-}
+// if (!$book) {
+//     die(header('Location: /catalog.php'));
+// }
 
 $book = $book->fetch_assoc();
 if (!empty($_SESSION['user'])) {
@@ -28,7 +28,7 @@ if (empty($my_comment) && isset($_POST['comment_create'])) {
     $request = BookCommentController::create($text, $raiting, $book_id, $_SESSION['user']['user_id']);
 
     if ($request['type']) {
-        header("Refresh: 3");
+        header("Refresh: 1");
     }
 }
 
@@ -82,8 +82,9 @@ if (isset($_POST['book_buy'])) {
                             <div class="product__views"><?= str_view_count($book['count_view']); ?></div>
                         </div>
                         <? if ($book['user_have']) : ?>
-                            <div>
+                            <div class="product__get">
                                 <a class="button product__buy" target="_blank" href="<?= $book['file_link'] ?>">Читать</a>
+                                <div>Аренда до: <?= $book['book_end_rental'] ?></div>
                             </div>
                         <? else : ?>
                             <form class="product__rental" method="post">

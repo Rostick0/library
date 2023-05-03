@@ -1,10 +1,4 @@
 --
--- База данных: `library`
---
-
--- --------------------------------------------------------
-
---
 -- Структура таблицы `author`
 --
 
@@ -19,7 +13,6 @@ CREATE TABLE `author` (
   `date_death` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
 
 --
 -- Структура таблицы `book`

@@ -16,11 +16,14 @@ class Book
                 `publishing`.`name` as `publishing_name`,
                 `book_type`.`name` as `book_type`,
                 (SELECT
-                    case when (`book_has_user`.`user_id` = '$user_id')
-                        then true
-                        else false
+                    CASE WHEN (`book_has_user`.`user_id` = '$user_id')
+                        THEN true
+                        ELSE false
                     END
-                FROM `book_has_user` WHERE `book_has_user`.`book_id` = '$book_id' AND `book_has_user`.`user_id` = '$user_id' AND `book_has_user`.`end_rental` >= NOW() ORDER BY `book_has_user`.`end_rental` DESC LIMIT 1) as `user_have`
+                FROM `book_has_user` WHERE `book_has_user`.`book_id` = '$book_id' AND `book_has_user`.`user_id` = '$user_id' AND `book_has_user`.`end_rental` >= NOW() ORDER BY `book_has_user`.`end_rental` DESC LIMIT 1) as `user_have`,
+                (SELECT
+                    `book_has_user`.`end_rental`
+                FROM `book_has_user` WHERE `book_has_user`.`book_id` = '$book_id' AND `book_has_user`.`user_id` = '$user_id' AND `book_has_user`.`end_rental` >= NOW() ORDER BY `book_has_user`.`end_rental` DESC LIMIT 1) as `book_end_rental`
             FROM `book` 
                 LEFT JOIN `author` ON `author`.`author_id` = `book`.`author_id`
                 LEFT JOIN `genre` ON `genre`.`genre_id` = `book`.`genre_id`
@@ -123,12 +126,13 @@ class Book
         $limit = (int) $limit;
         $offset = (int) $offset;
 
-        return $mysqli->query("SELECT
+        return $mysqli->query("SELECT DISTINCT
             `book`.*,
             `author`.`name` as `author_name`, `author`.`surname` as `author_surname`
         FROM `book`
             LEFT JOIN `author` ON `author`.`author_id` = `book`.`author_id`
-            INNER JOIN `book_has_user` ON  `book_has_user`.`user_id` = '$user_id' AND `book`.`book_id` = `book_has_user`.`book_id`
+            INNER JOIN `book_has_user` ON `book`.`book_id` = `book_has_user`.`book_id`
+        WHERE `book_has_user`.`user_id` = '$user_id' AND `book_has_user`.`end_rental` >= NOW()
         LIMIT $limit OFFSET $offset");
     }
 
@@ -139,7 +143,7 @@ class Book
         return $mysqli->query("SELECT
             COUNT(*)
         FROM `book_has_user`
-        WHERE `user_id` = '$user_id'")->fetch_assoc()['COUNT(*)'];
+        WHERE `user_id` = '$user_id'")->fetch_assoc()['COUNT(*)'] ?? 0;
     }
 
     public static function get_order_by($order_by, $limit = 8, $offset = 0)

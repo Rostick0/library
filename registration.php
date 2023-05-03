@@ -60,7 +60,7 @@ if (isset($_POST['register'])) {
             <? endif; ?>
             <form class="block-style auth__form registration__form" action="#" method="post" enctype="multipart/form-data">
                 <label class="label registration__label">
-                    <span>Имя*</span>
+                    <span>Имя<strong class="_red-text">*</strong></span>
                     <input class="input" type="text" name="user_name" value="<?= $user_name ?>" required>
                 </label>
                 <label class="label registration__label">
@@ -84,11 +84,11 @@ if (isset($_POST['register'])) {
                     <input class="input" type="tel" name="user_telephone" value="<?= $user_telephone ?>">
                 </label>
                 <label class="label registration__label">
-                    <span>Электронная почта*</span>
+                    <span>Электронная почта<strong class="_red-text">*</strong></span>
                     <input class="input" type="email" name="user_email" value="<?= $user_email ?>" required>
                 </label>
                 <label class="label registration__label">
-                    <span>Пароль*</span>
+                    <span>Пароль<strong class="_red-text">*</strong></span>
                     <input class="input" type="password" name="user_password" value="<?= $user_password ?>" required>
                 </label>
                 <div class="auth__bottom">
